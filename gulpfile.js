@@ -7,6 +7,9 @@ const uglify = require('gulp-uglify')
 const image = require('gulp-image')
 const htmlmin = require('gulp-htmlmin')
 const { parallel } = require('gulp')
+const babel = require('gulp-babel')
+const browserSync = require('browser-sync').create()
+const reload = browserSync.reload
 
 
 function tarefasCSS(cb) {
@@ -34,6 +37,10 @@ function tarefasJS(callback) {
         './vendor/jquery-ui/jquery-ui.js',
         './src/js/script.js'
     ])
+        .pipe(babel({
+            comments: false,
+            presets: ['@babel/env']
+        }))
         .pipe(concat('scripts.js'))
         .pipe(uglify())
         .pipe(rename({suffix: '.min'}))
@@ -67,6 +74,15 @@ function tarefasHTML(callback){
     return callback()
 
 }
+
+gulp.task('serve', function() {
+    browserSync.init({
+        server: {
+            baseDir: "./dist"
+        }
+    })
+    gulp.watch('./dist/**/*').on('change', reload)
+})
 
 
 exports.styles = tarefasCSS
