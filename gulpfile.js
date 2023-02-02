@@ -34,7 +34,7 @@ function tarefasJS(callback) {
         './node_modules/bootstrap/dist/js/bootstrap.js',
         './vendor/owl/js/owl.js',
         './vendor/jquery-mask/jquery.mask.js',
-        './vendor/jquery-ui/jquery-ui.js',
+        //'./vendor/jquery-ui/jquery-ui.js',
         './src/js/script.js'
     ])
         .pipe(babel({
@@ -81,12 +81,15 @@ gulp.task('serve', function() {
             baseDir: "./dist"
         }
     })
-    gulp.watch('./dist/**/*').on('change', reload)
+    gulp.watch('./src/**/*').on('change', process)
+    gulp.watch('./src/**/*').on('change', reload)
 })
 
+
+const process = series(tarefasHTML, tarefasCSS, tarefasJS )
 
 exports.styles = tarefasCSS
 exports.scripts = tarefasJS
 exports.images = tarefasImagem
 
-exports.default = parallel(tarefasHTML, tarefasCSS, tarefasJS)
+exports.default = process
